@@ -146,11 +146,105 @@ class App extends Component {
     );
   };
 
+  showWeatherIcon = () => {
+    return (
+      <div className="icon sun-shower">
+        <div className="cloud" />
+        <div className="sun">
+          <div className="rays" />
+        </div>
+        <div className="rain" />
+      </div>
+    );
+  };
+
+  showWeatherInfo = () => {
+    let { weatherInfo } = this.state;
+    weatherInfo = {
+      coord: {
+        lon: -0.13,
+        lat: 51.51
+      },
+      weather: [
+        {
+          id: 800,
+          main: 'Clear',
+          description: 'clear sky',
+          icon:
+            'https://cdn.glitch.com/6e8889e5-7a72-48f0-a061-863548450de5%2F01d.png?1499366022009'
+        }
+      ],
+      base: 'stations',
+      main: {
+        temp: 19.45,
+        pressure: 1023,
+        humidity: 43,
+        temp_min: 17,
+        temp_max: 21
+      },
+      visibility: 10000,
+      wind: {
+        speed: 3.6,
+        deg: 70
+      },
+      clouds: {
+        all: 0
+      },
+      dt: 1525600200,
+      sys: {
+        type: 1,
+        id: 5168,
+        message: 0.0061,
+        country: 'GB',
+        sunrise: 1525580567,
+        sunset: 1525635149
+      },
+      id: 2643743,
+      name: 'London',
+      cod: 200
+    };
+    if (!weatherInfo) return null;
+    return (
+      <div className="weather-container">
+        <div className="icon-container">{this.showWeatherIcon()}</div>
+        <div className="temperature-container">
+          <p className="temperature-text">58</p>
+          <div className="temp-buttons-container">
+            <button>C</button>
+            <button>F</button>
+          </div>
+        </div>
+        <p className="weather-text">{weatherInfo.name}</p>
+        <p className="weather-text">SUNNY</p>
+        <div className="weather-detail">
+          <div className="single-detail">
+            <p className="detail-number">{weatherInfo.wind.speed}</p>
+            <p>Icon</p>
+            <p className="detail-text">Wind</p>
+          </div>
+          <hr />
+          <div className="single-detail">
+            <p className="detail-number">{weatherInfo.main.humidity}</p>
+            <p>Icon</p>
+            <p className="detail-text">Humidity</p>
+          </div>
+          <hr />
+          <div className="single-detail">
+            <p className="detail-number">{weatherInfo.main.pressure}</p>
+            <p>Icon</p>
+            <p className="detail-text">Pressure</p>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   render() {
     return (
       <div className="App">
-        {this.showSpinner()}
-        {this.showError()}
+        {/* {this.showSpinner()}
+        {this.showError()} */}
+        {this.showWeatherInfo()}
       </div>
     );
   }
