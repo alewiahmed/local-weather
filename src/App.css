@@ -13,6 +13,7 @@
   max-width: 500px;
   border-radius: 5px;
   background-color: #293251;
+  box-shadow: 2px 11px 3px #000000;
 }
 
 .icon-container {
@@ -60,6 +61,10 @@
 .temp-buttons-container button.selected {
   color: white;
   font-weight: bold;
+}
+
+.temp-buttons-container.reverse {
+  flex-direction: column-reverse;
 }
 
 .weather-text {

@@ -9,7 +9,8 @@ class App extends Component {
     longitude: null,
     loadingInfo: '',
     loadingError: '',
-    weatherInfo: null
+    weatherInfo: null,
+    temperatureMeasure: 'C'
   };
 
   componentWillMount() {
@@ -24,6 +25,12 @@ class App extends Component {
   };
 
   getLocation = () => {
+    this.setState({
+      latitude: 2,
+      longitude: 2
+    });
+    this.getWeatherInfo();
+    return;
     if (navigator.geolocation) {
       this.setState({
         loading: true,
@@ -52,6 +59,49 @@ class App extends Component {
 
   fetch = async (latitude, longitude) => {
     const URL = `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`;
+    return {
+      coord: {
+        lon: -0.13,
+        lat: 51.51
+      },
+      weather: [
+        {
+          id: 800,
+          main: 'Clear',
+          description: 'clear sky',
+          icon:
+            'https://cdn.glitch.com/6e8889e5-7a72-48f0-a061-863548450de5%2F01d.png?1499366022009'
+        }
+      ],
+      base: 'stations',
+      main: {
+        temp: 19.45,
+        pressure: 1023,
+        humidity: 43,
+        temp_min: 17,
+        temp_max: 21
+      },
+      visibility: 10000,
+      wind: {
+        speed: 3.6,
+        deg: 70
+      },
+      clouds: {
+        all: 0
+      },
+      dt: 1525600200,
+      sys: {
+        type: 1,
+        id: 5168,
+        message: 0.0061,
+        country: 'GB',
+        sunrise: 1525580567,
+        sunset: 1525635149
+      },
+      id: 2643743,
+      name: 'London',
+      cod: 200
+    };
     try {
       const fetchResult = fetch(URL);
       const response = await fetchResult;
@@ -67,7 +117,7 @@ class App extends Component {
 
   getWeatherInfo = async () => {
     let { longitude, latitude } = this.state;
-    if (longitude === null || latitude === null) return;
+    // if (longitude === null || latitude === null) return;
     this.setState({
       loading: true,
       loadingInfo: 'getting weather info...'
@@ -158,60 +208,50 @@ class App extends Component {
     );
   };
 
+  showTemperature = () => {
+    let { weatherInfo, temperatureMeasure } = this.state;
+    if (!weatherInfo) return 0;
+    let temp = weatherInfo.main.temp;
+    if (temperatureMeasure === 'F') {
+      let f = 9 / 5 * temp + 32;
+      if (f.toString().includes('.')) return f.toFixed(2);
+      return f;
+    }
+    if (temp.toString().includes('.')) return temp.toFixed(2);
+    return temp;
+  };
+
+  toggleMeasure = measure => {
+    this.setState({
+      temperatureMeasure: measure
+    });
+  };
+
   showWeatherInfo = () => {
-    let { weatherInfo } = this.state;
-    weatherInfo = {
-      coord: {
-        lon: -0.13,
-        lat: 51.51
-      },
-      weather: [
-        {
-          id: 800,
-          main: 'Clear',
-          description: 'clear sky',
-          icon:
-            'https://cdn.glitch.com/6e8889e5-7a72-48f0-a061-863548450de5%2F01d.png?1499366022009'
-        }
-      ],
-      base: 'stations',
-      main: {
-        temp: 19.45,
-        pressure: 1023,
-        humidity: 43,
-        temp_min: 17,
-        temp_max: 21
-      },
-      visibility: 10000,
-      wind: {
-        speed: 3.6,
-        deg: 70
-      },
-      clouds: {
-        all: 0
-      },
-      dt: 1525600200,
-      sys: {
-        type: 1,
-        id: 5168,
-        message: 0.0061,
-        country: 'GB',
-        sunrise: 1525580567,
-        sunset: 1525635149
-      },
-      id: 2643743,
-      name: 'London',
-      cod: 200
-    };
+    let { weatherInfo, temperatureMeasure } = this.state;
     if (!weatherInfo) return null;
+    let buttonsContainer =
+      temperatureMeasure === 'F'
+        ? 'temp-buttons-container reverse'
+        : 'temp-buttons-container';
     return (
       <div className="weather-container">
         <div className="icon-container">{this.showWeatherIcon()}</div>
         <div className="temperature-container">
-          <p className="temperature-text">58</p>
-          <div className="temp-buttons-container">
-            <button>C</button>
-            <button>F</button>
+          <p className="temperature-text">{this.showTemperature()}</p>
+          <div className={buttonsContainer}>
+            <button
+              className={temperatureMeasure === 'C' ? 'selected' : ''}
+              onClick={() => this.toggleMeasure('C')}
+            >
+              C
+            </button>
+            <button
+              className={temperatureMeasure === 'F' ? 'selected' : ''}
+              onClick={() => this.toggleMeasure('F')}
+            >
+              F
+            </button>
           </div>
         </div>
         <p className="weather-text">{weatherInfo.name}</p>
