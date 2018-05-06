@@ -3,67 +3,145 @@ import './App.css';
 
 class App extends Component {
   state = {
+    errorType: '',
+    loading: false,
     latitude: null,
     longitude: null,
-    locationError: '',
-    loadingLocation: false
+    loadingInfo: '',
+    loadingError: '',
+    weatherInfo: null
   };
 
   componentWillMount() {
     this.getLocation();
   }
 
+  clearError = () => {
+    this.setState({
+      errorType: '',
+      loadingError: ''
+    });
+  };
+
   getLocation = () => {
     if (navigator.geolocation) {
-      this.setState({ loadingLocation: true });
+      this.setState({
+        loading: true,
+        loadingInfo: 'getting location'
+      });
       navigator.geolocation.getCurrentPosition(
         position => {
           this.setState({
-            loadingLocation: false,
+            loadingInfo: '',
+            loading: false,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
           });
+          this.getWeatherInfo();
         },
-        () => {},
-        this.handleLocationError
+        this.handleLocationError,
+        { timeout: 20000 }
       );
     } else {
       this.setState({
-        locationError: 'Geolocation is not supported by this browser.'
+        errorType: 'location',
+        loadingError: 'Geolocation is not supported by this browser.'
+      });
+    }
+  };
+
+  fetch = async (latitude, longitude) => {
+    const URL = `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`;
+    try {
+      const fetchResult = fetch(URL);
+      const response = await fetchResult;
+      if (response.ok) {
+        return await response.json();
+      } else {
+        throw new Error('Something went wrong.');
+      }
+    } catch (e) {
+      return { error: e };
+    }
+  };
+
+  getWeatherInfo = async () => {
+    let { longitude, latitude } = this.state;
+    if (longitude === null || latitude === null) return;
+    this.setState({
+      loading: true,
+      loadingInfo: 'getting weather info...'
+    });
+    let result = await this.fetch(latitude, longitude);
+    if (result.error) {
+      this.setState({
+        errorType: 'weather',
+        loadingError: 'Something went wrong when getting weather info.'
+      });
+      return;
+    } else {
+      this.setState({
+        loading: false,
+        loadingInfo: '',
+        weatherInfo: result
       });
     }
   };
 
   handleLocationError = error => {
-    let locationError = '';
+    let loadingError = '';
     switch (error.code) {
       case error.PERMISSION_DENIED:
-        error = 'User denied the request for Geolocation.';
+        loadingError = 'User denied the request for Geolocation.';
         break;
       case error.POSITION_UNAVAILABLE:
-        error = 'Location information is unavailable.';
+        loadingError = 'Location information is unavailable.';
         break;
       case error.TIMEOUT:
-        error = 'The request to get user location timed out.';
+        loadingError = 'The request to get user location timed out.';
         break;
       case error.UNKNOWN_ERROR:
       default:
-        error = 'An unknown error occurred.';
+        loadingError = 'An unknown error occurred.';
         break;
     }
-    this.setState({ locationError, loadingLocation: false });
+    this.setState({ loadingError, loading: false, errorType: 'location' });
+  };
+
+  showError = () => {
+    let { loadingError, errorType } = this.state;
+    if (loadingError === '') return null;
+    let retryFunction =
+      errorType === 'location' ? this.getLocation : this.getWeatherInfo;
+    return (
+      <div className="error-container">
+        <p>{loadingError}</p>
+        <button
+          className="error-button"
+          onClick={() => {
+            this.clearError();
+            retryFunction();
+          }}
+        >
+          Retry
+        </button>
+      </div>
+    );
   };
 
   showSpinner = () => {
-    let { loadingLocation } = this.state;
-    if (!loadingLocation) return null;
+    let { loading, loadingInfo } = this.state;
+    if (!loading) return null;
     return (
-      <div className="spinner">
-        <div className="rect1" />
-        <div className="rect2" />
-        <div className="rect3" />
-        <div className="rect4" />
-        <div className="rect5" />
+      <div className="loading-container">
+        <div className="spinner">
+          <div className="rect1" />
+          <div className="rect2" />
+          <div className="rect3" />
+          <div className="rect4" />
+          <div className="rect5" />
+        </div>
+        <p>{loadingInfo}</p>
       </div>
     );
   };
@@ -71,7 +149,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div>{this.showSpinner()}</div>
+        {this.showSpinner()}
+        {this.showError()}
       </div>
     );
   }
