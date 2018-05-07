@@ -234,7 +234,7 @@ class App extends Component {
 
   showWeatherInfo = () => {
     let { weatherInfo, temperatureMeasure } = this.state;
-    if (!weatherInfo) return null;
+    if (!weatherInfo) return <div className="weather-container hide" />;
     let buttonsContainer =
       temperatureMeasure === 'F'
         ? 'temp-buttons-container reverse'
@@ -262,7 +262,7 @@ class App extends Component {
         <p className="weather-text">{`${weatherInfo.name}, ${
           weatherInfo.sys.country
         }`}</p>
-        <p className="weather-text">{weatherInfo.weather[0].main}</p>
+        <p className="weather-text">{weatherInfo.weather[0].description}</p>
         <div className="weather-detail">
           <div className="single-detail">
             <p className="detail-number">{weatherInfo.wind.speed}</p>
