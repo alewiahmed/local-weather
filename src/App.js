@@ -313,19 +313,19 @@ class App extends Component {
         <div className="weather-detail">
           <div className="single-detail">
             <p className="detail-number">{weatherInfo.wind.speed}</p>
-            <p>Icon</p>
+            <p>km/h</p>
             <p className="detail-text">Wind</p>
           </div>
           <hr />
           <div className="single-detail">
             <p className="detail-number">{weatherInfo.main.humidity}</p>
-            <p>Icon</p>
+            <p>%</p>
             <p className="detail-text">Humidity</p>
           </div>
           <hr />
           <div className="single-detail">
             <p className="detail-number">{weatherInfo.main.pressure}</p>
-            <p>Icon</p>
+            <p>hPa</p>
             <p className="detail-text">Pressure</p>
           </div>
         </div>
