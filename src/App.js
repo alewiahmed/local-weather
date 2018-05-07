@@ -197,15 +197,67 @@ class App extends Component {
   };
 
   showWeatherIcon = () => {
-    return (
-      <div className="icon sun-shower">
-        <div className="cloud" />
-        <div className="sun">
-          <div className="rays" />
-        </div>
-        <div className="rain" />
-      </div>
-    );
+    let { weatherInfo } = this.state;
+    let type = weatherInfo.weather[0].main.toLowerCase();
+    switch (type) {
+      case 'clear':
+        return (
+          <div className="icon sunny">
+            <div className="sun">
+              <div className="rays" />
+            </div>
+          </div>
+        );
+        break;
+      case 'clouds':
+        return (
+          <div className="icon cloudy">
+            <div className="cloud" />
+            <div className="cloud" />
+          </div>
+        );
+        break;
+      case 'snow':
+        return (
+          <div className="icon flurries">
+            <div className="cloud" />
+            <div className="snow">
+              <div className="flake" />
+              <div className="flake" />
+            </div>
+          </div>
+        );
+        break;
+      case 'rain':
+        return (
+          <div className="icon rainy">
+            <div className="cloud" />
+            <div className="rain" />
+          </div>
+        );
+        break;
+      case 'thunderstorm':
+        return (
+          <div className="icon thunder-storm">
+            <div className="cloud" />
+            <div className="lightning">
+              <div className="bolt" />
+              <div className="bolt" />
+            </div>
+          </div>
+        );
+        break;
+      default:
+        return (
+          <div className="icon sun-shower">
+            <div className="cloud" />
+            <div className="sun">
+              <div className="rays" />
+            </div>
+            <div className="rain" />
+          </div>
+        );
+    }
   };
 
   showTemperature = () => {
