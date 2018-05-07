@@ -148,7 +148,7 @@ hr {
   height: 100%;
   margin: 0 3px 0 0;
   display: inline-block;
-  background-color: maroon;
+  background-color: white;
   animation: sk-stretchdelay 1.2s infinite ease-in-out;
   -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
 }

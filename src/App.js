@@ -25,12 +25,6 @@ class App extends Component {
   };
 
   getLocation = () => {
-    this.setState({
-      latitude: 2,
-      longitude: 2
-    });
-    this.getWeatherInfo();
-    return;
     if (navigator.geolocation) {
       this.setState({
         loading: true,
@@ -59,49 +53,6 @@ class App extends Component {
 
   fetch = async (latitude, longitude) => {
     const URL = `https://fcc-weather-api.glitch.me/api/current?lat=${latitude}&lon=${longitude}`;
-    return {
-      coord: {
-        lon: -0.13,
-        lat: 51.51
-      },
-      weather: [
-        {
-          id: 800,
-          main: 'Clear',
-          description: 'clear sky',
-          icon:
-            'https://cdn.glitch.com/6e8889e5-7a72-48f0-a061-863548450de5%2F01d.png?1499366022009'
-        }
-      ],
-      base: 'stations',
-      main: {
-        temp: 19.45,
-        pressure: 1023,
-        humidity: 43,
-        temp_min: 17,
-        temp_max: 21
-      },
-      visibility: 10000,
-      wind: {
-        speed: 3.6,
-        deg: 70
-      },
-      clouds: {
-        all: 0
-      },
-      dt: 1525600200,
-      sys: {
-        type: 1,
-        id: 5168,
-        message: 0.0061,
-        country: 'GB',
-        sunrise: 1525580567,
-        sunset: 1525635149
-      },
-      id: 2643743,
-      name: 'London',
-      cod: 200
-    };
     try {
       const fetchResult = fetch(URL);
       const response = await fetchResult;
@@ -117,7 +68,7 @@ class App extends Component {
 
   getWeatherInfo = async () => {
     let { longitude, latitude } = this.state;
-    // if (longitude === null || latitude === null) return;
+    if (longitude === null || latitude === null) return;
     this.setState({
       loading: true,
       loadingInfo: 'getting weather info...'
@@ -199,9 +150,10 @@ class App extends Component {
   showWeatherIcon = () => {
     let { weatherInfo } = this.state;
     let type = weatherInfo.weather[0].main.toLowerCase();
+    let icon = null;
     switch (type) {
       case 'clear':
-        return (
+        icon = (
           <div className="icon sunny">
             <div className="sun">
               <div className="rays" />
@@ -210,7 +162,7 @@ class App extends Component {
         );
         break;
       case 'clouds':
-        return (
+        icon = (
           <div className="icon cloudy">
             <div className="cloud" />
             <div className="cloud" />
@@ -218,7 +170,7 @@ class App extends Component {
         );
         break;
       case 'snow':
-        return (
+        icon = (
           <div className="icon flurries">
             <div className="cloud" />
             <div className="snow">
@@ -229,7 +181,7 @@ class App extends Component {
         );
         break;
       case 'rain':
-        return (
+        icon = (
           <div className="icon rainy">
             <div className="cloud" />
             <div className="rain" />
@@ -237,7 +189,7 @@ class App extends Component {
         );
         break;
       case 'thunderstorm':
-        return (
+        icon = (
           <div className="icon thunder-storm">
             <div className="cloud" />
             <div className="lightning">
@@ -248,7 +200,7 @@ class App extends Component {
         );
         break;
       default:
-        return (
+        icon = (
           <div className="icon sun-shower">
             <div className="cloud" />
             <div className="sun">
@@ -258,6 +210,7 @@ class App extends Component {
           </div>
         );
     }
+    return icon;
   };
 
   showTemperature = () => {
@@ -336,8 +289,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        {/* {this.showSpinner()}
-        {this.showError()} */}
+        {this.showSpinner()}
+        {this.showError()}
         {this.showWeatherInfo()}
       </div>
     );
