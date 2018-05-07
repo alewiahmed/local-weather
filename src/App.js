@@ -254,7 +254,9 @@ class App extends Component {
             </button>
           </div>
         </div>
-        <p className="weather-text">{weatherInfo.name}</p>
+        <p className="weather-text">{`${weatherInfo.name}, ${
+          weatherInfo.sys.country
+        }`}</p>
         <p className="weather-text">{weatherInfo.weather[0].main}</p>
         <div className="weather-detail">
           <div className="single-detail">
