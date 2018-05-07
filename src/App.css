@@ -35,9 +35,8 @@
 }
 
 .temperature-text:after {
-  top: -4px;
-  content: 'o';
-  font-size: 40%;
+  content: '°';
+  font-size: 55%;
   position: absolute;
 }
 

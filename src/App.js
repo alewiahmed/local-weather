@@ -255,7 +255,7 @@ class App extends Component {
           </div>
         </div>
         <p className="weather-text">{weatherInfo.name}</p>
-        <p className="weather-text">SUNNY</p>
+        <p className="weather-text">{weatherInfo.weather[0].main}</p>
         <div className="weather-detail">
           <div className="single-detail">
             <p className="detail-number">{weatherInfo.wind.speed}</p>
