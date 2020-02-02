@@ -13,7 +13,7 @@ class App extends Component {
     temperatureMeasure: 'C'
   };
 
-  componentWillMount() {
+  componentDidMount() {
     this.getLocation();
   }
 
